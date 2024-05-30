@@ -15,6 +15,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "bull-repl": "^0.29.1"
+    "bull-repl": "^0.29.1",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4"
   }
 }
