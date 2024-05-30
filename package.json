@@ -1,12 +1,20 @@
 {
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "start": "bun src/index.ts"
+    "dev": "bun run --hot src/llamaqServer.ts",
+    "start": "bun src/llamaqServer.ts"
   },
   "dependencies": {
-    "hono": "^4.4.0"
+    "hono": "^4.4.0",
+    "@bull-board/api": "^5.19.1",
+    "@bull-board/hono": "^5.19.1",
+    "@hono/node-server": "^1.11.1",
+    "@t3-oss/env-core": "^0.10.1",
+    "bullmq": "^5.7.13",
+    "ioredis": "^5.4.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "bull-repl": "^0.29.1"
   }
 }
