@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  redis:
+    container_name: llamaq_redis
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - llamaq_redis_data:/data
+
+volumes:
+  llamaq_redis_data:
