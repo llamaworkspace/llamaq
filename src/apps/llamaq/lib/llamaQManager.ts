@@ -1,6 +1,7 @@
 import { env } from '@/env'
 import { Queue, Worker, type Job } from 'bullmq'
 import IORedis, { type RedisOptions } from 'ioredis'
+
 class LlamaQManager {
   private readonly targetUrl: string
   private readonly queues = new Map<string, Queue>()
