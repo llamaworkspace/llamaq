@@ -4,7 +4,7 @@ import { bearerAuth } from 'hono/bearer-auth'
 import { llamaqEnqueueHandler } from './handlers/llamaqEnqueueHandler'
 
 const llamaqRouter = new Hono()
-llamaqRouter.use(bearerAuth({ token: env.LLAMAQ_ACCESS_TOKEN }))
+llamaqRouter.use(bearerAuth({ token: env.LLAMAQ_ACCESS_KEY }))
 
 // Important! Keep routes after the .use middleware
 llamaqRouter.route('/enqueue', llamaqEnqueueHandler)

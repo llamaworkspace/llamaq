@@ -74,7 +74,7 @@ class LlamaQManager {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${env.NEXTJS_INCOMING_API_ROUTE_ACCESS_KEY}`,
+        Authorization: `Bearer ${env.NEXTJS_API_ACCESS_KEY}`,
       },
       body,
     })
