@@ -6,6 +6,7 @@ export const env = createEnv({
     REDIS_URL: z.string().url(),
     NEXTJS_PROCESSOR_URL: z.string().url(),
     LLAMAQ_ACCESS_TOKEN: z.string(),
+    NEXTJS_INCOMING_API_ROUTE_ACCESS_KEY: z.string(),
   },
   runtimeEnv: process.env,
 })
