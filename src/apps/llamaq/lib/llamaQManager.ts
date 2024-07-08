@@ -64,7 +64,18 @@ class LlamaQManager {
   }
 
   private processor = async (job: Job<unknown, unknown, string>) => {
+    console.log(
+      'Processing job',
+      job.name,
+      job.id,
+      job.data,
+      job.queueName,
+      job.attemptsStarted,
+    )
+
     const body = JSON.stringify({
+      jobId: job.id,
+      jobAttemptNumber: job.attemptsStarted,
       queue: job.queueName,
       action: job.name,
       payload: job.data,

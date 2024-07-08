@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "bun run --hot src/llamaqServer.ts",
-    "start": "bun src/llamaqServer.ts"
+    "start": "NODE_DEBUG=bull bun src/llamaqServer.ts"
   },
   "dependencies": {
     "hono": "^4.4.0",
