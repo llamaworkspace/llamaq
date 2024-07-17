@@ -78,7 +78,10 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/llamaq:${{ env.VERSION }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/llamaq:${{ env.VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/llamaq:latest
+          platforms: linux/amd64,linux/arm64
 
       - name: Create GitHub tag
         id: create_tag

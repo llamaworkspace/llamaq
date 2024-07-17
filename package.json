@@ -1,6 +1,6 @@
 {
   "name": "llamaq",
-  "version": "0.0.1-rc1",
+  "version": "0.0.1-rc2",
   "scripts": {
     "dev": "bun run --hot src/llamaqServer.ts",
     "start": "NODE_DEBUG=bull bun src/llamaqServer.ts"
