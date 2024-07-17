@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Specify the Node.js version
+          node-version: '20'
 
       - name: Get version from package.json
         id: get_version
@@ -30,8 +30,14 @@ jobs:
       - name: Get latest tag
         id: get_latest_tag
         run: |
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          TAGS=$(git tag)
+          if [ -z "$TAGS" ]; then
+            echo "No tags found."
+            echo "LATEST_TAG=" >> $GITHUB_ENV
+          else
+            LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          fi
 
       - name: Compare versions
         id: compare_versions
@@ -40,7 +46,11 @@ jobs:
             echo "No tags found. Proceeding with build."
             echo "VERSION_HIGHER=true" >> $GITHUB_ENV
           else
-            LATEST_VERSION=${{ env.LATEST_TAG#v }}
+            LATEST_VERSION=${{ env.LATEST_TAG }}
+            # Remove the 'v' prefix if it exists
+            if [[ "$LATEST_VERSION" == v* ]]; then
+              LATEST_VERSION=${LATEST_VERSION:1}
+            fi
             if [ "$(printf '%s\n' "${{ env.VERSION }}" "$LATEST_VERSION" | sort -V | head -n1)" != "${{ env.VERSION }}" ]; then
               echo "Current version ${{ env.VERSION }} is higher than latest tag $LATEST_VERSION. Proceeding with build."
               echo "VERSION_HIGHER=true" >> $GITHUB_ENV
