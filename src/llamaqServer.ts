@@ -26,3 +26,7 @@ console.log(`To access the Bull UI, open http://localhost:${PORT}/ui`)
 process.on('SIGINT', () => {
   process.nextTick(() => process.exit(0))
 })
+
+process.on('SIGTERM', () => {
+  process.nextTick(() => process.exit(0))
+})
