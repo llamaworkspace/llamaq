@@ -58,6 +58,12 @@ class LlamaQManager {
       connection: this.connection,
       defaultJobOptions: {
         attempts: 3,
+        removeOnComplete: 10,
+        removeOnFail: 25,
+        backoff: {
+          type: 'exponential',
+          delay: 2000,
+        },
       },
     })
     this.queues.set(name, queue)
