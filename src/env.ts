@@ -7,6 +7,7 @@ export const env = createEnv({
     NEXTJS_PROCESSOR_URL: z.string().url(),
     LLAMAQ_ACCESS_KEY: z.string(),
     NEXTJS_API_ACCESS_KEY: z.string(),
+    DEBUG: z.string().optional(),
   },
   runtimeEnv: process.env,
 })

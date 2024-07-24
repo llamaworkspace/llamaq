@@ -2,6 +2,8 @@ import { env } from '@/env'
 import { Queue, Worker, type Job } from 'bullmq'
 import IORedis, { type RedisOptions } from 'ioredis'
 
+const logToConsole = env.DEBUG === 'true'
+
 class LlamaQManager {
   private readonly targetUrl: string
   private readonly queues = new Map<string, Queue>()
@@ -24,6 +26,10 @@ class LlamaQManager {
   enqueue = async (name: string, action: string, payload: unknown) => {
     const queue = this.getOrCreateQueue(name)
     await queue.add(action, payload)
+    if (logToConsole) {
+      console.log(`Enqueued job ${action} to queue ${name}`)
+      console.log('Payload:', payload)
+    }
     return queue
   }
 
@@ -60,6 +66,11 @@ class LlamaQManager {
       connection: this.connection,
       concurrency: 10,
     })
+
+    if (logToConsole) {
+      console.log(`Created queue ${name}`)
+    }
+
     return queue
   }
 
@@ -71,28 +82,45 @@ class LlamaQManager {
       action: job.name,
       payload: job.data,
     })
-
-    const res = await fetch(this.targetUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${env.NEXTJS_API_ACCESS_KEY}`,
-      },
-      body,
-    })
-
-    const text = await res.text()
-
-    if (!res.ok) {
-      throw new Error(
-        `Remote failed to process event. Remote response: ${res.status} ${res.statusText}. Response: ${text}`,
-      )
+    if (logToConsole) {
+      console.log(`Processing job ${job.id} in queue ${job.queueName}`)
+      console.log('Payload:', job.data)
     }
 
     try {
-      return JSON.parse(text)
-    } catch (error) {
-      return text
+      const res = await fetch(this.targetUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${env.NEXTJS_API_ACCESS_KEY}`,
+        },
+        body,
+      })
+
+      const text = await res.text()
+
+      if (!res.ok) {
+        throw new Error(
+          `Remote failed to process event. Remote response: ${res.status} ${res.statusText}. Response: ${text}`,
+        )
+      }
+
+      try {
+        return JSON.parse(text)
+      } catch (error) {
+        return text
+      }
+    } catch (_error) {
+      const error = _error as FetchError
+
+      if (error.cause && error.cause.code === 'ECONNREFUSED') {
+        throw new Error('Connection to LlamaQ service has been refused')
+      } else if (error.cause && error.cause.code === 'ENOTFOUND') {
+        throw new Error(
+          'The service url has not been found. url: ' + this.targetUrl,
+        )
+      }
+      throw error
     }
   }
 
